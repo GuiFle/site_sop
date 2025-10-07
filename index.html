@@ -1,0 +1,393 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>UniFinder – Compare French Universities</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: "Segoe UI", Arial, sans-serif;
+      background-color: #f8f9fc;
+      color: #333;
+    }
+
+    /* Navbar */
+    .navbar {
+      background-color: #0a2342;
+      color: #fff;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 1rem 2rem;
+    }
+
+    .navbar h1 {
+      margin: 0;
+      font-size: 1.5rem;
+      color: #ffcc33;
+    }
+
+    .navbar nav a {
+      color: #fff;
+      margin-left: 1.5rem;
+      text-decoration: none;
+      font-weight: 500;
+    }
+
+    .navbar nav a:hover {
+      text-decoration: underline;
+    }
+
+    /* Hero Section */
+    .hero {
+      background-color: #e9eef7;
+      padding: 2rem;
+      text-align: center;
+    }
+
+    .hero h2 {
+      margin-bottom: 1rem;
+      font-size: 1.8rem;
+      color: #0a2342;
+    }
+
+    .search-bar {
+      display: flex;
+      justify-content: center;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+    }
+
+    .search-bar input,
+    .search-bar select,
+    .search-bar button {
+      padding: 0.7rem;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+      font-size: 1rem;
+    }
+
+    .search-bar button {
+      background-color: #0a2342;
+      color: white;
+      cursor: pointer;
+      border: none;
+    }
+
+    .search-bar button:hover {
+      background-color: #183b68;
+    }
+
+    /* Layout: Filters + Results */
+    .main-content {
+      display: flex;
+      padding: 2rem 10%;
+      gap: 2rem;
+    }
+
+    /* Sidebar Filters */
+    .filters {
+      flex: 0 0 250px;
+      background-color: white;
+      border-radius: 10px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+      padding: 1rem;
+      height: fit-content;
+    }
+
+    .filters h3 {
+      margin-top: 0;
+      color: #0a2342;
+      border-bottom: 2px solid #ffcc33;
+      padding-bottom: 0.5rem;
+    }
+
+    .filter-group {
+      margin: 1rem 0;
+    }
+
+    .filter-group label {
+      display: block;
+      margin: 0.4rem 0;
+      font-size: 0.95rem;
+    }
+
+    .filter-group select,
+    .filter-group input[type="range"] {
+      width: 100%;
+      margin-top: 0.3rem;
+    }
+
+    /* Results Section */
+    .results-section {
+      flex: 1;
+    }
+
+    .results-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 1rem;
+    }
+
+    .results-header select {
+      padding: 0.5rem;
+      border-radius: 5px;
+      border: 1px solid #ccc;
+    }
+
+    /* Full-width Cards */
+    .results {
+      display: flex;
+      flex-direction: column;
+      gap: 1.5rem;
+    }
+
+    .card {
+      background-color: white;
+      border-radius: 10px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+      overflow: hidden;
+      display: flex;
+      flex-direction: row;
+      height: 200px;
+    }
+
+    .card img {
+      width: 35%;
+      height: 100%;
+      object-fit: cover;
+      flex-shrink: 0;
+      border-top-left-radius: 10px;
+      border-bottom-left-radius: 10px;
+      display: block;
+    }
+
+    .card-content {
+      padding: 1rem;
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+
+    .card-content h3 {
+      margin-top: 0;
+      color: #0a2342;
+    }
+
+    .card-content p {
+      margin: 0.3rem 0;
+      font-size: 0.95rem;
+    }
+
+    .card-footer {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .card-footer button {
+      background-color: #ffcc33;
+      border: none;
+      padding: 0.5rem 1rem;
+      border-radius: 5px;
+      cursor: pointer;
+      font-weight: 600;
+      color: #0a2342;
+    }
+
+    .card-footer button:hover {
+      background-color: #ffd84d;
+    }
+
+    /* Footer */
+    footer {
+      background-color: #0a2342;
+      color: #fff;
+      text-align: center;
+      padding: 1.5rem;
+      font-size: 0.9rem;
+      margin-top: 3rem;
+    }
+  </style>
+</head>
+<body>
+  <!-- Navbar -->
+  <div class="navbar">
+    <h1>UniFinder</h1>
+    <nav>
+      <a href="#">Home</a>
+      <a href="#">Universities</a>
+      <a href="#">Compare</a>
+      <a href="#">About</a>
+    </nav>
+  </div>
+
+  <!-- Hero Section -->
+  <section class="hero">
+    <h2>Find and Compare the Best French Universities</h2>
+    <div class="search-bar">
+      <input type="text" placeholder="Search by university or city" />
+      <select>
+        <option>All fields</option>
+        <option>Engineering</option>
+        <option>Business</option>
+        <option>Science</option>
+        <option>Humanities</option>
+      </select>
+      <button>Search</button>
+    </div>
+  </section>
+
+  <!-- Main Content: Filters + Results -->
+  <div class="main-content">
+    <!-- Filters Sidebar -->
+    <aside class="filters">
+      <h3>Filters</h3>
+
+      <div class="filter-group">
+        <label><input type="checkbox"> Show only public universities</label>
+        <label><input type="checkbox"> Include private universities</label>
+      </div>
+
+      <div class="filter-group">
+        <label for="field">Field of Study</label>
+        <select id="field">
+          <option>All fields</option>
+          <option>Engineering</option>
+          <option>Business</option>
+          <option>Science</option>
+          <option>Arts & Humanities</option>
+        </select>
+      </div>
+
+      <div class="filter-group">
+        <label for="tuition">Max Tuition (€)</label>
+        <input type="range" id="tuition" min="1000" max="20000" value="10000" />
+      </div>
+
+      <div class="filter-group">
+        <label>Location</label>
+        <label><input type="checkbox"> Paris</label>
+        <label><input type="checkbox"> Lyon</label>
+        <label><input type="checkbox"> Marseille</label>
+        <label><input type="checkbox"> Grenoble</label>
+      </div>
+    </aside>
+
+    <!-- Results Section -->
+    <section class="results-section">
+      <div class="results-header">
+        <h3>5 Universities Found</h3>
+        <div>
+          <label>Sort by:</label>
+          <select>
+            <option>Ranking</option>
+            <option>Tuition (Low to High)</option>
+            <option>Rating</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="results">
+        <!-- Card 1 -->
+        <div class="card">
+          <img src="./img/sorbonne-university.webp" alt="Sorbonne University" />
+          <div class="card-content">
+            <div>
+              <h3>Sorbonne Université</h3>
+              <p><strong>Location:</strong> Paris</p>
+              <p><strong>Ranking:</strong> #1 in France</p>
+              <p><strong>Tuition:</strong> €2,800 / year</p>
+              <p><strong>Rating:</strong> ⭐ 4.8 / 5</p>
+            </div>
+            <div class="card-footer">
+              <label><input type="checkbox"> Compare</label>
+              <button>View details</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Card 2 -->
+        <div class="card">
+          <img src="./img/logo_psl.webp" alt="Université PSL" />
+          <div class="card-content">
+            <div>
+              <h3>Université PSL (Paris Sciences et Lettres)</h3>
+              <p><strong>Location:</strong> Paris</p>
+              <p><strong>Ranking:</strong> #2 in France</p>
+              <p><strong>Tuition:</strong> €3,000 / year</p>
+              <p><strong>Rating:</strong> ⭐ 4.7 / 5</p>
+            </div>
+            <div class="card-footer">
+              <label><input type="checkbox"> Compare</label>
+              <button>View details</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Card 3 -->
+        <div class="card">
+          <img src="./img/1786-universite-lyon.webp" alt="Université de Lyon" />
+          <div class="card-content">
+            <div>
+              <h3>Université de Lyon</h3>
+              <p><strong>Location:</strong> Lyon</p>
+              <p><strong>Ranking:</strong> #4 in France</p>
+              <p><strong>Tuition:</strong> €2,500 / year</p>
+              <p><strong>Rating:</strong> ⭐ 4.5 / 5</p>
+            </div>
+            <div class="card-footer">
+              <label><input type="checkbox"> Compare</label>
+              <button>View details</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Card 4 -->
+        <div class="card">
+          <img src="./img/mesri-logo-universite-grenoble-alpes-png-18149.webp" alt="Université Grenoble Alpes" />
+          <div class="card-content">
+            <div>
+              <h3>Université Grenoble Alpes</h3>
+              <p><strong>Location:</strong> Grenoble</p>
+              <p><strong>Ranking:</strong> #6 in France</p>
+              <p><strong>Tuition:</strong> €2,400 / year</p>
+              <p><strong>Rating:</strong> ⭐ 4.6 / 5</p>
+            </div>
+            <div class="card-footer">
+              <label><input type="checkbox"> Compare</label>
+              <button>View details</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Card 5 -->
+        <div class="card">
+          <img src="./img/aix-marseille-universite-logo-png_seeklogo-353656.webp" alt="Aix-Marseille Université" />
+          <div class="card-content">
+            <div>
+              <h3>Aix-Marseille Université</h3>
+              <p><strong>Location:</strong> Marseille</p>
+              <p><strong>Ranking:</strong> #7 in France</p>
+              <p><strong>Tuition:</strong> €2,300 / year</p>
+              <p><strong>Rating:</strong> ⭐ 4.4 / 5</p>
+            </div>
+            <div class="card-footer">
+              <label><input type="checkbox"> Compare</label>
+              <button>View details</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <!-- Footer -->
+  <footer>
+    © 2025 UniFinder. For educational presentation use only.
+  </footer>
+</body>
+</html>
