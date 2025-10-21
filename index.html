@@ -5,315 +5,301 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>SCHOOLMATCH – Comparer les universités françaises</title>
   <style>
-    body {
-      margin: 0;
-      font-family: "Coco Gothic", Arial, sans-serif;
-      background-color: #f8f9fc;
-      color: #333;
-    }
+  :root{
+    --orange:#e67049;
+    --orange-strong:#ff8a1a;
+    --bg:#f8f9fc;
+    --muted:#666f82;
+    --card-shadow: 0 2px 8px rgba(10,20,40,0.06);
+    --dark:#0a2342;
+  }
 
-    .navbar {
-      background-color: #ffffff;
-      color: #333;
-      display: flex;
-      align-items: center;
-      padding: 0.65rem 2rem;
-      box-shadow: 0 1px 4px rgba(0,0,0,0.06);
-      border-bottom: 1px solid #eee;
-      gap: 1rem;
-      position: relative; /* allow absolute centering of the middle search */
-    }
+  /* Reset & base */
+  *,*::before,*::after{box-sizing:border-box}
+  html,body{height:100%}
+  body{
+    margin:0;
+    font-family:"Coco Gothic", "Segoe UI", Arial, sans-serif;
+    background:var(--bg);
+    color:#222;
+    -webkit-font-smoothing:antialiased;
+    -moz-osx-font-smoothing:grayscale;
+    line-height:1.35;
+  }
 
-    .navbar h1 {
-      margin: 0;
-      font-size: 1.35rem;
-      color: #e67049; /* orange title */
-      font-weight: 700;
-      letter-spacing: 0.5px;
-      flex: 0 0 auto;
-      z-index: 2;
-    }
+  /* ---------- NAVBAR ---------- */
+  .navbar{
+    background:#fff;
+    display:flex;
+    align-items:center;          /* vertical centering of title/search/nav */
+    padding:0.6rem 1.5rem;
+    box-shadow:0 1px 4px rgba(0,0,0,0.06);
+    border-bottom:1px solid #eee;
+    gap:1rem;
+    position:relative;          /* used for absolute centering on wide screens */
+    flex-wrap:wrap;             /* allow wrapping on narrow screens */
+  }
 
-    /* center area (search) - absolutely centered in the navbar */
-    .nav-center {
-      position: absolute;
-      left: 50%;
-      top: 50%;
-      transform: translate(-50%, -50%);
-      width: 100%;
-      max-width: 520px;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      z-index: 1;
-      pointer-events: auto;
-    }
+  /* logo image (use <img class="logo">) */
+  .navbar img.logo{
+    height:40px;                /* desired height - adjust if needed */
+    width:auto;
+    flex:0 0 auto;
+    display:block;
+    margin-right:0.5rem;
+  }
 
-    .nav-search {
-      display: flex;
-      width: 100%;
-      box-shadow: 0 1px 6px rgba(0,0,0,0.06);
-      border-radius: 6px;
-      overflow: hidden;
-      border: 1px solid #eee;
-      background: #fff;
-    }
+  .navbar h1{
+    margin:0;
+    font-size:1.25rem;
+    color:var(--orange);
+    font-weight:700;
+    letter-spacing:0.3px;
+    z-index:3;
+    flex:0 0 auto;
+    display:flex;
+    align-items:center;
+    gap:0.5rem;
+  }
 
-    .nav-search input {
-      flex: 1;
-      padding: 0.5rem 0.75rem;
-      border: none;
-      outline: none;
-      font-size: 0.95rem;
-      background: #fff;
-    }
+  /* center search: in-flow by default so right nav cannot overlap */
+  .nav-center{
+    position:static;            /* keep in-flow on small/medium screens */
+    width:100%;
+    max-width:720px;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    padding:0 0.5rem;
+    z-index:4;                  /* above non-essential content */
+    order:2;
+    margin:0;
+  }
 
-    .nav-search button {
-      background-color: #e67049;
-      color: #fff;
-      border: none;
-      padding: 0.5rem 0.8rem;
-      cursor: pointer;
-      font-weight: 600;
+  /* absolute centering only on large screens where there's space */
+  @media (min-width:1200px){
+    .nav-center{
+      position:absolute;
+      left:50%;
+      top:50%;
+      transform:translate(-50%,-50%);
+      max-width:580px;
+      padding:0;
     }
+    /* allow right nav room beside centered search */
+    .navbar nav{ max-width:44%; }
+  }
 
-    .nav-search button:hover {
-      background-color: #ff8a1a;
-    }
+  .nav-search{
+    display:flex;
+    width:100%;
+    box-shadow:var(--card-shadow);
+    border-radius:8px;
+    overflow:hidden;
+    border:1px solid #eee;
+    background:#fff;
+  }
 
-    /* make all nav links look like orange buttons */
-    .navbar nav {
-      display: flex;
-      gap: 0.5rem;
-      flex: 0 0 auto;
-      align-items: center;
-      margin-left: auto; /* keep nav aligned to the right */
-      z-index: 2;
-    }
+  .nav-search input{
+    flex:1;
+    padding:0.5rem 0.8rem;
+    border:0;
+    outline:0;
+    font-size:0.95rem;
+    background:#fff;
+    color:inherit;
+  }
 
-    .navbar nav a {
-      background-color: #e67049;
-      color: #fff;
-      text-decoration: none;
-      font-weight: 500;
-      padding: 0.45rem 0.8rem;
-      border-radius: 6px;
-      transition: background-color 0.15s ease, transform 0.08s ease;
-      display: inline-block;
-    }
+  .nav-search button{
+    background:var(--orange);
+    color:#fff;
+    border:0;
+    padding:0.5rem 0.85rem;
+    cursor:pointer;
+    font-weight:600;
+    transition:background .12s ease, transform .06s ease;
+  }
+  .nav-search button:hover{ background:var(--orange-strong); transform:translateY(-1px); }
 
-    .navbar nav a:hover {
-      background-color: #ff8a1a;
-      transform: translateY(-2px);
-      color: #fff;
-      text-decoration: none;
-    }
+  /* right-side nav: flexible and allowed to shrink/wrap */
+  .navbar nav{
+    display:flex;
+    gap:0.5rem;
+    flex:0 1 auto;             /* allow nav to shrink */
+    align-items:center;
+    margin-left:auto;
+    z-index:3;
+    flex-wrap:wrap;            /* allow links to wrap to next line */
+    justify-content:flex-end;
+    order:3;
+  }
 
-    /* responsive: hide center search on very small screens */
-    @media (max-width: 720px) {
-      .nav-center { display: none; }
-      .navbar { padding: 0.5rem 1rem; }
-      .navbar h1 { font-size: 1.1rem; }
-    }
+  .navbar nav a{
+    background:var(--orange);
+    color:#fff;
+    text-decoration:none;
+    font-weight:600;
+    padding:0.42rem 0.8rem;
+    border-radius:8px;
+    transition:background .12s ease, transform .06s ease;
+    display:inline-flex;
+    align-items:center;
+    gap:0.4rem;
+    flex:0 1 auto;             /* each link may shrink */
+    min-width:0;
+    font-size:clamp(0.78rem, 1.1vw, 0.95rem);
+    white-space:nowrap;
+  }
+  .navbar nav a:hover{ background:var(--orange-strong); transform:translateY(-2px); }
 
-    /* Hero Section */
-    .hero {
-      background-color: #e9eef7;
-      padding: 2rem;
-      text-align: center;
-    }
+  /* ensure nav doesn't push itself lower than centered search on medium screens */
+  @media (max-width:1199px){
+    .nav-center{ order:2; position:static; transform:none; width:100%; max-width:none; margin:0.25rem 0; }
+    .navbar h1{ order:1; }
+    .navbar nav{ order:3; width:100%; justify-content:center; margin-top:0.25rem; }
+    .navbar{ align-items:center; padding:0.45rem 1rem; }
+    .navbar nav a{ padding:0.34rem 0.6rem; font-size:clamp(0.76rem, 2.2vw, 0.9rem); }
+  }
 
-    .hero h2 {
-      margin-bottom: 1rem;
-      font-size: 1.8rem;
-      color: #0a2342;
-    }
+  /* very small screens */
+  @media (max-width:520px){
+    .navbar img.logo{ height:30px; }
+    .navbar h1{ font-size:1rem; }
+    .nav-search input{ padding:0.45rem; font-size:0.92rem; }
+    .nav-search button{ padding:0.45rem 0.6rem; font-size:0.9rem; }
+    .navbar nav a{ padding:0.28rem 0.5rem; font-size:0.85rem; }
+    .nav-center{ padding:0 0.25rem; }
+  }
 
-    .search-bar {
-      display: flex;
-      justify-content: center;
-      flex-wrap: wrap;
-      gap: 0.5rem;
-    }
+  /* ---------- HERO ---------- */
+  .hero{
+    background:#e9eef7;
+    padding:2rem;
+    text-align:center;
+  }
+  .hero h2{
+    margin:0 0 1rem 0;
+    font-size:1.8rem;
+    color:var(--dark);
+  }
 
-    .search-bar input,
-    .search-bar select,
-    .search-bar button {
-      padding: 0.7rem;
-      border: 1px solid #ccc;
-      border-radius: 5px;
-      font-size: 1rem;
-    }
+  /* ---------- LAYOUT ---------- */
+  .main-content{
+    display:flex;
+    padding:2rem 10%;
+    gap:2rem;
+    align-items:flex-start;
+  }
 
-    /* search button orange to match navbar */
-    .search-bar button {
-      background-color: #e67049;
-      color: white;
-      cursor: pointer;
-      border: none;
-    }
+  .filters{
+    flex:0 0 250px;
+    background:#fff;
+    border-radius:10px;
+    box-shadow:var(--card-shadow);
+    padding:1rem;
+    height:fit-content;
+  }
+  .filters h3{ margin-top:0; color:var(--dark); border-bottom:2px solid var(--orange); padding-bottom:0.5rem; }
+  .filter-group{ margin:1rem 0; }
+  .filter-group label{ display:block; margin:0.4rem 0; font-size:0.95rem; color:var(--muted); }
 
-    .search-bar button:hover {
-      background-color: #e67049;
-    }
+  .results-section{ flex:1; }
+  .results-header{ display:flex; justify-content:space-between; align-items:center; margin-bottom:1rem; gap:1rem; flex-wrap:wrap; }
+  .results-header select{ padding:0.45rem 0.6rem; border-radius:6px; border:1px solid #d8dbe0; background:#fff; }
 
-    /* Layout: Filters + Results */
-    .main-content {
-      display: flex;
-      padding: 2rem 10%;
-      gap: 2rem;
-    }
+  /* ---------- CARDS ---------- */
+  .results{ display:flex; flex-direction:column; gap:1.25rem; }
+  .card{
+    background:#fff;
+    border-radius:10px;
+    box-shadow:var(--card-shadow);
+    overflow:hidden;
+    display:flex;
+    flex-direction:row;
+    height:200px;
+    align-items:stretch;
+  }
 
-    /* Sidebar Filters */
-    .filters {
-      flex: 0 0 250px;
-      background-color: white;
-      border-radius: 10px;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-      padding: 1rem;
-      height: fit-content;
-    }
+  .card img{
+    width:35%;
+    height:100%;
+    object-fit:cover;
+    flex-shrink:0;
+    border-top-left-radius:10px;
+    border-bottom-left-radius:10px;
+    display:block;
+    background:#fff;
+  }
 
-    .filters h3 {
-      margin-top: 0;
-      color: #0a2342;
-      border-bottom: 2px solid #e67049;
-      padding-bottom: 0.5rem;
-    }
+  /* logos with odd ratio: contain + padding */
+  .card img[src*="lyon"],
+  .card img[src*="grenoble"],
+  .card img[src*="logo_psl"],
+  .card img[src*="sorbonne"] ,
+  .card img[src*="aix-marseille"] ,
+  .card img[src*="uca"] {
+    object-fit:contain;
+    background:#fff;
+    box-sizing:border-box;
+  }
 
-    .filter-group {
-      margin: 1rem 0;
-    }
+  .card-content{
+    padding:1rem;
+    flex:1;
+    display:flex;
+    flex-direction:column;
+    justify-content:space-between;
+  }
+  .card-content h3{ margin:0; color:var(--dark); font-size:1.05rem; }
+  .card-content p{ margin:0.25rem 0; font-size:0.95rem; color:var(--muted); }
 
-    .filter-group label {
-      display: block;
-      margin: 0.4rem 0;
-      font-size: 0.95rem;
-    }
+  .card-footer{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    gap:1rem;
+  }
 
-    .filter-group select,
-    .filter-group input[type="range"] {
-      width: 100%;
-      margin-top: 0.3rem;
-    }
+  /* button styles used across site */
+  .btn, .card-footer button, .card-footer a.btn{
+    background:var(--orange);
+    color:#fff;
+    border:0;
+    padding:0.5rem 1rem;
+    border-radius:6px;
+    cursor:pointer;
+    font-weight:700;
+    text-decoration:none;
+    display:inline-flex;
+    align-items:center;
+    gap:0.5rem;
+  }
+  .btn.secondary, .card-footer a.secondary{
+    background:#fff;
+    color:var(--dark);
+    border:1px solid #e6e9ef;
+    font-weight:600;
+  }
+  .btn:hover, .card-footer button:hover, .card-footer a.btn:hover{ background:var(--orange-strong); transform:translateY(-1px); }
 
-    /* Results Section */
-    .results-section {
-      flex: 1;
-    }
+  /* ---------- FOOTER ---------- */
+  footer{
+    background:var(--dark);
+    color:#fff;
+    text-align:center;
+    padding:1.5rem;
+    font-size:0.9rem;
+    margin-top:3rem;
+  }
 
-    .results-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: 1rem;
-    }
-
-    .results-header select {
-      padding: 0.5rem;
-      border-radius: 5px;
-      border: 1px solid #ccc;
-    }
-
-    /* Full-width Cards */
-    .results {
-      display: flex;
-      flex-direction: column;
-      gap: 1.5rem;
-    }
-
-    .card {
-      background-color: white;
-      border-radius: 10px;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-      overflow: hidden;
-      display: flex;
-      flex-direction: row;
-      height: 200px;
-    }
-
-    .card img {
-      width: 35%;
-      height: 100%;
-      object-fit: cover;
-      flex-shrink: 0;
-      border-top-left-radius: 10px;
-      border-bottom-left-radius: 10px;
-      display: block;
-    }
-
-    /* Logos (Lyon / Grenoble / autres petits logos) : garder leur ratio, centrer et réduire le remplissage */
-    .card img[src*="lyon"],
-    .card img[src*="grenoble"]
-    {
-      object-fit: contain;
-      padding: 0.5rem;
-      background: #ffffff;
-      box-sizing: border-box;
-    }
-
-    .card-content {
-      padding: 1rem;
-      flex: 1;
-      display: flex;
-      flex-direction: column;
-      justify-content: space-between;
-    }
-
-    .card-content h3 {
-      margin-top: 0;
-      color: #0a2342;
-    }
-
-    .card-content p {
-      margin: 0.3rem 0;
-      font-size: 0.95rem;
-    }
-
-    .card-footer {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-    }
-
-    /* Details buttons orange and consistent */
-    .card-footer button {
-      background-color: #e67049;
-      border: none;
-      padding: 0.5rem 1rem;
-      border-radius: 5px;
-      cursor: pointer;
-      font-weight: 600;
-      color: #ffffff;
-    }
-
-    .card-footer button:hover {
-      background-color: #e67049;
-    }
-
-    /* allow links styled as buttons inside card-footer */
-    .card-footer a.btn {
-      background-color: #e67049;
-      border: none;
-      padding: 0.5rem 1rem;
-      border-radius: 5px;
-      cursor: pointer;
-      font-weight: 600;
-      color: #ffffff;
-      text-decoration: none;
-      display: inline-block;
-    }
-    .card-footer a.btn:hover { background-color: #ff8a1a; }
-
-    /* Footer */
-    footer {
-      background-color: #0a2342;
-      color: #fff;
-      text-align: center;
-      padding: 1.5rem;
-      font-size: 0.9rem;
-      margin-top: 3rem;
-    }
+  /* ---------- RESPONSIVE ---------- */
+  @media (max-width:1000px){
+    .card{ height:auto; flex-direction:column; }
+    .card img{ width:100%; height:220px; border-radius:8px 8px 0 0; }
+    .main-content{ padding:1.5rem 6%; flex-direction:column; }
+    .filters{ width:100%; order:2 }
+    .results-section{ order:3; width:100% }
+  }
 
     /* Logo dans la navbar : taille fixe en hauteur, ratio conservé */
     .navbar > img,
@@ -355,7 +341,6 @@
     <nav>
       <a class="btn" href="index.html">Accueil</a>
       <a class="btn" href="#">Universités</a>
-      <a class="btn" href="#">Comparer</a>
       <a class="btn" href="#">À propos</a>
     </nav>
   </div>
@@ -399,13 +384,14 @@
         <label><input type="checkbox"> Lyon</label>
         <label><input type="checkbox"> Marseille</label>
         <label><input type="checkbox"> Grenoble</label>
+        <label><input type="checkbox"> Clermont-Ferrand</label>
       </div>
     </aside>
 
     <!-- Results Section -->
     <section class="results-section">
       <div class="results-header">
-        <h3>5 universités trouvées</h3>
+        <h3>6 universités trouvées</h3>
         <div>
           <label>Trier par :</label>
           <select>
@@ -464,7 +450,7 @@
             </div>
             <div class="card-footer">
               <label><input type="checkbox"> Comparer</label>
-              <a class="btn" href="#">>Voir les détails</a>
+              <a class="btn" href="#">Voir les détails</a>
             </div>
           </div>
         </div>
@@ -501,6 +487,24 @@
             <div class="card-footer">
               <label><input type="checkbox"> Comparer</label>
               <a class="btn" href="#">Voir les détails</a>
+            </div>
+          </div>
+        </div>
+
+        <!-- Card 5 -->
+        <div class="card">
+          <img src="./img/uca.webp" alt="Université Clermont Auvergne"/>
+          <div class="card-content">
+            <div>
+              <h3>Université Clermont Auvergne</h3>
+              <p><strong>Localisation :</strong> Clermont-Ferrand</p>
+              <p><strong>Classement :</strong> #8 en France</p>
+              <p><strong>Frais de scolarité :</strong> €283 / an</p>
+              <p><strong>Note :</strong> ⭐ 4.2 / 5</p>
+            </div>
+            <div class="card-footer">
+              <label><input type="checkbox"> Comparer</label>
+              <a class="btn" href="uca.html">Voir les détails</a>
             </div>
           </div>
         </div>
