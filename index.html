@@ -1,42 +1,119 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="fr">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>UniFinder – Compare French Universities</title>
+  <title>SCHOOLMATCH – Comparer les universités françaises</title>
   <style>
     body {
       margin: 0;
-      font-family: "Segoe UI", Arial, sans-serif;
+      font-family: "Coco Gothic", Arial, sans-serif;
       background-color: #f8f9fc;
       color: #333;
     }
 
-    /* Navbar */
     .navbar {
-      background-color: #0a2342;
-      color: #fff;
+      background-color: #ffffff;
+      color: #333;
       display: flex;
-      justify-content: space-between;
       align-items: center;
-      padding: 1rem 2rem;
+      padding: 0.65rem 2rem;
+      box-shadow: 0 1px 4px rgba(0,0,0,0.06);
+      border-bottom: 1px solid #eee;
+      gap: 1rem;
+      position: relative; /* allow absolute centering of the middle search */
     }
 
     .navbar h1 {
       margin: 0;
-      font-size: 1.5rem;
-      color: #ffcc33;
+      font-size: 1.35rem;
+      color: #e67049; /* orange title */
+      font-weight: 700;
+      letter-spacing: 0.5px;
+      flex: 0 0 auto;
+      z-index: 2;
+    }
+
+    /* center area (search) - absolutely centered in the navbar */
+    .nav-center {
+      position: absolute;
+      left: 50%;
+      top: 50%;
+      transform: translate(-50%, -50%);
+      width: 100%;
+      max-width: 520px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      z-index: 1;
+      pointer-events: auto;
+    }
+
+    .nav-search {
+      display: flex;
+      width: 100%;
+      box-shadow: 0 1px 6px rgba(0,0,0,0.06);
+      border-radius: 6px;
+      overflow: hidden;
+      border: 1px solid #eee;
+      background: #fff;
+    }
+
+    .nav-search input {
+      flex: 1;
+      padding: 0.5rem 0.75rem;
+      border: none;
+      outline: none;
+      font-size: 0.95rem;
+      background: #fff;
+    }
+
+    .nav-search button {
+      background-color: #e67049;
+      color: #fff;
+      border: none;
+      padding: 0.5rem 0.8rem;
+      cursor: pointer;
+      font-weight: 600;
+    }
+
+    .nav-search button:hover {
+      background-color: #ff8a1a;
+    }
+
+    /* make all nav links look like orange buttons */
+    .navbar nav {
+      display: flex;
+      gap: 0.5rem;
+      flex: 0 0 auto;
+      align-items: center;
+      margin-left: auto; /* keep nav aligned to the right */
+      z-index: 2;
     }
 
     .navbar nav a {
+      background-color: #e67049;
       color: #fff;
-      margin-left: 1.5rem;
       text-decoration: none;
       font-weight: 500;
+      padding: 0.45rem 0.8rem;
+      border-radius: 6px;
+      transition: background-color 0.15s ease, transform 0.08s ease;
+      display: inline-block;
     }
 
     .navbar nav a:hover {
-      text-decoration: underline;
+      background-color: #ff8a1a;
+      transform: translateY(-2px);
+      color: #fff;
+      text-decoration: none;
+    }
+
+    /* responsive: hide center search on very small screens */
+    @media (max-width: 720px) {
+      .nav-center { display: none; }
+      .navbar { padding: 0.5rem 1rem; }
+      .navbar h1 { font-size: 1.1rem; }
     }
 
     /* Hero Section */
@@ -68,15 +145,16 @@
       font-size: 1rem;
     }
 
+    /* search button orange to match navbar */
     .search-bar button {
-      background-color: #0a2342;
+      background-color: #e67049;
       color: white;
       cursor: pointer;
       border: none;
     }
 
     .search-bar button:hover {
-      background-color: #183b68;
+      background-color: #e67049;
     }
 
     /* Layout: Filters + Results */
@@ -99,7 +177,7 @@
     .filters h3 {
       margin-top: 0;
       color: #0a2342;
-      border-bottom: 2px solid #ffcc33;
+      border-bottom: 2px solid #e67049;
       padding-bottom: 0.5rem;
     }
 
@@ -164,6 +242,16 @@
       display: block;
     }
 
+    /* Logos (Lyon / Grenoble / autres petits logos) : garder leur ratio, centrer et réduire le remplissage */
+    .card img[src*="lyon"],
+    .card img[src*="grenoble"]
+    {
+      object-fit: contain;
+      padding: 0.5rem;
+      background: #ffffff;
+      box-sizing: border-box;
+    }
+
     .card-content {
       padding: 1rem;
       flex: 1;
@@ -188,19 +276,34 @@
       align-items: center;
     }
 
+    /* Details buttons orange and consistent */
     .card-footer button {
-      background-color: #ffcc33;
+      background-color: #e67049;
       border: none;
       padding: 0.5rem 1rem;
       border-radius: 5px;
       cursor: pointer;
       font-weight: 600;
-      color: #0a2342;
+      color: #ffffff;
     }
 
     .card-footer button:hover {
-      background-color: #ffd84d;
+      background-color: #e67049;
     }
+
+    /* allow links styled as buttons inside card-footer */
+    .card-footer a.btn {
+      background-color: #e67049;
+      border: none;
+      padding: 0.5rem 1rem;
+      border-radius: 5px;
+      cursor: pointer;
+      font-weight: 600;
+      color: #ffffff;
+      text-decoration: none;
+      display: inline-block;
+    }
+    .card-footer a.btn:hover { background-color: #ff8a1a; }
 
     /* Footer */
     footer {
@@ -216,60 +319,58 @@
 <body>
   <!-- Navbar -->
   <div class="navbar">
-    <h1>UniFinder</h1>
+    <h1>SCHOOLMATCH</h1>
+
+    <div class="nav-center">
+      <form class="nav-search" role="search" action="#" method="get" onsubmit="return false;">
+        <input type="text" name="q" placeholder="Rechercher universités, ville, domaine..." aria-label="Rechercher" />
+        <button type="submit" title="Rechercher">Rechercher</button>
+      </form>
+    </div>
+
     <nav>
-      <a href="#">Home</a>
-      <a href="#">Universities</a>
-      <a href="#">Compare</a>
-      <a href="#">About</a>
+      <a class="btn" href="index.html">Accueil</a>
+      <a class="btn" href="#">Universités</a>
+      <a class="btn" href="#">Comparer</a>
+      <a class="btn" href="#">À propos</a>
     </nav>
   </div>
 
   <!-- Hero Section -->
   <section class="hero">
-    <h2>Find and Compare the Best French Universities</h2>
-    <div class="search-bar">
-      <input type="text" placeholder="Search by university or city" />
-      <select>
-        <option>All fields</option>
-        <option>Engineering</option>
-        <option>Business</option>
-        <option>Science</option>
-        <option>Humanities</option>
-      </select>
-      <button>Search</button>
-    </div>
+    <h2>Trouvez et comparez les meilleures universités françaises</h2>
+    <!-- search retiré pour éviter duplication -->
   </section>
 
   <!-- Main Content: Filters + Results -->
   <div class="main-content">
     <!-- Filters Sidebar -->
     <aside class="filters">
-      <h3>Filters</h3>
+      <h3>Filtres</h3>
 
       <div class="filter-group">
-        <label><input type="checkbox"> Show only public universities</label>
-        <label><input type="checkbox"> Include private universities</label>
+        <label><input type="checkbox"> Afficher seulement les universités publiques</label>
+        <label><input type="checkbox"> Inclure les universités privées</label>
       </div>
 
       <div class="filter-group">
-        <label for="field">Field of Study</label>
+        <label for="field">Domaine d'études</label>
         <select id="field">
-          <option>All fields</option>
-          <option>Engineering</option>
-          <option>Business</option>
-          <option>Science</option>
-          <option>Arts & Humanities</option>
+          <option>Tous les domaines</option>
+          <option>Ingénierie</option>
+          <option>Commerce</option>
+          <option>Sciences</option>
+          <option>Arts & Lettres</option>
         </select>
       </div>
 
       <div class="filter-group">
-        <label for="tuition">Max Tuition (€)</label>
+        <label for="tuition">Frais de scolarité max (€)</label>
         <input type="range" id="tuition" min="1000" max="20000" value="10000" />
       </div>
 
       <div class="filter-group">
-        <label>Location</label>
+        <label>Localisation</label>
         <label><input type="checkbox"> Paris</label>
         <label><input type="checkbox"> Lyon</label>
         <label><input type="checkbox"> Marseille</label>
@@ -280,32 +381,30 @@
     <!-- Results Section -->
     <section class="results-section">
       <div class="results-header">
-        <h3>5 Universities Found</h3>
+        <h3>5 universités trouvées</h3>
         <div>
-          <label>Sort by:</label>
+          <label>Trier par :</label>
           <select>
-            <option>Ranking</option>
-            <option>Tuition (Low to High)</option>
-            <option>Rating</option>
+            <option>Classement</option>
+            <option>Frais (croissant)</option>
+            <option>Note</option>
           </select>
         </div>
       </div>
 
-      <div class="results">
-        <!-- Card 1 -->
-        <div class="card">
+      <div class="card">
           <img src="./img/sorbonne-university.webp" alt="Sorbonne University" />
           <div class="card-content">
             <div>
               <h3>Sorbonne Université</h3>
-              <p><strong>Location:</strong> Paris</p>
-              <p><strong>Ranking:</strong> #1 in France</p>
-              <p><strong>Tuition:</strong> €2,800 / year</p>
-              <p><strong>Rating:</strong> ⭐ 4.8 / 5</p>
+              <p><strong>Localisation :</strong> Paris</p>
+              <p><strong>Classement :</strong> #1 en France</p>
+              <p><strong>Frais de scolarité :</strong> €2 800 / an</p>
+              <p><strong>Note :</strong> ⭐ 4.8 / 5</p>
             </div>
             <div class="card-footer">
-              <label><input type="checkbox"> Compare</label>
-              <button>View details</button>
+              <label><input type="checkbox"> Comparer</label>
+              <a class="btn" href="sorbonne.html">Voir les détails</a>
             </div>
           </div>
         </div>
@@ -316,14 +415,14 @@
           <div class="card-content">
             <div>
               <h3>Université PSL (Paris Sciences et Lettres)</h3>
-              <p><strong>Location:</strong> Paris</p>
-              <p><strong>Ranking:</strong> #2 in France</p>
-              <p><strong>Tuition:</strong> €3,000 / year</p>
-              <p><strong>Rating:</strong> ⭐ 4.7 / 5</p>
+              <p><strong>Localisation :</strong> Paris</p>
+              <p><strong>Classement :</strong> #2 en France</p>
+              <p><strong>Frais de scolarité :</strong> €3 000 / an</p>
+              <p><strong>Note :</strong> ⭐ 4.7 / 5</p>
             </div>
             <div class="card-footer">
-              <label><input type="checkbox"> Compare</label>
-              <button>View details</button>
+              <label><input type="checkbox"> Comparer</label>
+              <a class="btn" href="sorbonne.html">Voir les détails</a>
             </div>
           </div>
         </div>
@@ -334,14 +433,14 @@
           <div class="card-content">
             <div>
               <h3>Université de Lyon</h3>
-              <p><strong>Location:</strong> Lyon</p>
-              <p><strong>Ranking:</strong> #4 in France</p>
-              <p><strong>Tuition:</strong> €2,500 / year</p>
-              <p><strong>Rating:</strong> ⭐ 4.5 / 5</p>
+              <p><strong>Localisation :</strong> Lyon</p>
+              <p><strong>Classement :</strong> #4 en France</p>
+              <p><strong>Frais de scolarité :</strong> €2 500 / an</p>
+              <p><strong>Note :</strong> ⭐ 4.5 / 5</p>
             </div>
             <div class="card-footer">
-              <label><input type="checkbox"> Compare</label>
-              <button>View details</button>
+              <label><input type="checkbox"> Comparer</label>
+              <a class="btn" href="#">>Voir les détails</a>
             </div>
           </div>
         </div>
@@ -352,14 +451,14 @@
           <div class="card-content">
             <div>
               <h3>Université Grenoble Alpes</h3>
-              <p><strong>Location:</strong> Grenoble</p>
-              <p><strong>Ranking:</strong> #6 in France</p>
-              <p><strong>Tuition:</strong> €2,400 / year</p>
-              <p><strong>Rating:</strong> ⭐ 4.6 / 5</p>
+              <p><strong>Localisation :</strong> Grenoble</p>
+              <p><strong>Classement :</strong> #6 en France</p>
+              <p><strong>Frais de scolarité :</strong> €2 400 / an</p>
+              <p><strong>Note :</strong> ⭐ 4.6 / 5</p>
             </div>
             <div class="card-footer">
-              <label><input type="checkbox"> Compare</label>
-              <button>View details</button>
+              <label><input type="checkbox"> Comparer</label>
+              <a class="btn" href="#">Voir les détails</a>
             </div>
           </div>
         </div>
@@ -370,14 +469,14 @@
           <div class="card-content">
             <div>
               <h3>Aix-Marseille Université</h3>
-              <p><strong>Location:</strong> Marseille</p>
-              <p><strong>Ranking:</strong> #7 in France</p>
-              <p><strong>Tuition:</strong> €2,300 / year</p>
-              <p><strong>Rating:</strong> ⭐ 4.4 / 5</p>
+              <p><strong>Localisation :</strong> Marseille</p>
+              <p><strong>Classement :</strong> #7 en France</p>
+              <p><strong>Frais de scolarité :</strong> €2 300 / an</p>
+              <p><strong>Note :</strong> ⭐ 4.4 / 5</p>
             </div>
             <div class="card-footer">
-              <label><input type="checkbox"> Compare</label>
-              <button>View details</button>
+              <label><input type="checkbox"> Comparer</label>
+              <a class="btn" href="#">Voir les détails</a>
             </div>
           </div>
         </div>
@@ -387,7 +486,7 @@
 
   <!-- Footer -->
   <footer>
-    © 2025 UniFinder. For educational presentation use only.
+    © 2025 SCHOOLMATCH. Usage à des fins éducatives uniquement.
   </footer>
 </body>
 </html>
