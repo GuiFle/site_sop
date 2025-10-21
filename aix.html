@@ -1,0 +1,387 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>UCA — SCHOOLMATCH</title>
+  <style>
+:root{
+    --orange:#e67049;
+    --orange-strong:#ff8a1a;
+    --bg:#f8f9fc;
+    --muted:#666f82;
+    --card-shadow: 0 2px 8px rgba(10,20,40,0.06);
+    --dark:#0a2342;
+  }
+
+  /* Reset & base */
+  *,*::before,*::after{box-sizing:border-box}
+  html,body{height:100%}
+  body{
+    margin:0;
+    font-family:"Coco Gothic", "Segoe UI", Arial, sans-serif;
+    background:var(--bg);
+    color:#222;
+    -webkit-font-smoothing:antialiased;
+    -moz-osx-font-smoothing:grayscale;
+    line-height:1.35;
+  }
+
+  /* ---------- NAVBAR ---------- */
+  .navbar{
+    background:#fff;
+    display:flex;
+    align-items:center;          /* vertical centering of title/search/nav */
+    padding:0.6rem 1.5rem;
+    box-shadow:0 1px 4px rgba(0,0,0,0.06);
+    border-bottom:1px solid #eee;
+    gap:1rem;
+    position:relative;          /* used for absolute centering on wide screens */
+    flex-wrap:wrap;             /* allow wrapping on narrow screens */
+  }
+
+  /* logo image (use <img class="logo">) */
+  .navbar img.logo{
+    height:40px;                /* desired height - adjust if needed */
+    width:auto;
+    flex:0 0 auto;
+    display:block;
+    margin-right:0.5rem;
+  }
+
+  .navbar h1{
+    margin:0;
+    font-size:1.25rem;
+    color:var(--orange);
+    font-weight:700;
+    letter-spacing:0.3px;
+    z-index:3;
+    flex:0 0 auto;
+    display:flex;
+    align-items:center;
+    gap:0.5rem;
+  }
+
+  /* center search: in-flow by default so right nav cannot overlap */
+  .nav-center{
+    position:static;            /* keep in-flow on small/medium screens */
+    width:100%;
+    max-width:720px;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    padding:0 0.5rem;
+    z-index:4;                  /* above non-essential content */
+    order:2;
+    margin:0;
+  }
+
+  /* absolute centering only on large screens where there's space */
+  @media (min-width:1200px){
+    .nav-center{
+      position:absolute;
+      left:50%;
+      top:50%;
+      transform:translate(-50%,-50%);
+      max-width:580px;
+      padding:0;
+    }
+    /* allow right nav room beside centered search */
+    .navbar nav{ max-width:44%; }
+  }
+
+  .nav-search{
+    display:flex;
+    width:100%;
+    box-shadow:var(--card-shadow);
+    border-radius:8px;
+    overflow:hidden;
+    border:1px solid #eee;
+    background:#fff;
+  }
+
+  .nav-search input{
+    flex:1;
+    padding:0.5rem 0.8rem;
+    border:0;
+    outline:0;
+    font-size:0.95rem;
+    background:#fff;
+    color:inherit;
+  }
+
+  .nav-search button{
+    background:var(--orange);
+    color:#fff;
+    border:0;
+    padding:0.5rem 0.85rem;
+    cursor:pointer;
+    font-weight:600;
+    transition:background .12s ease, transform .06s ease;
+  }
+  .nav-search button:hover{ background:var(--orange-strong); transform:translateY(-1px); }
+
+  /* right-side nav: flexible and allowed to shrink/wrap */
+  .navbar nav{
+    display:flex;
+    gap:0.5rem;
+    flex:0 1 auto;             /* allow nav to shrink */
+    align-items:center;
+    margin-left:auto;
+    z-index:3;
+    flex-wrap:wrap;            /* allow links to wrap to next line */
+    justify-content:flex-end;
+    order:3;
+  }
+
+  .navbar nav a{
+    background:var(--orange);
+    color:#fff;
+    text-decoration:none;
+    font-weight:600;
+    padding:0.42rem 0.8rem;
+    border-radius:8px;
+    transition:background .12s ease, transform .06s ease;
+    display:inline-flex;
+    align-items:center;
+    gap:0.4rem;
+    flex:0 1 auto;             /* each link may shrink */
+    min-width:0;
+    font-size:clamp(0.78rem, 1.1vw, 0.95rem);
+    white-space:nowrap;
+  }
+  .navbar nav a:hover{ background:var(--orange-strong); transform:translateY(-2px); }
+
+  /* ensure nav doesn't push itself lower than centered search on medium screens */
+  @media (max-width:1199px){
+    .nav-center{ order:2; position:static; transform:none; width:100%; max-width:none; margin:0.25rem 0; }
+    .navbar h1{ order:1; }
+    .navbar nav{ order:3; width:100%; justify-content:center; margin-top:0.25rem; }
+    .navbar{ align-items:center; padding:0.45rem 1rem; }
+    .navbar nav a{ padding:0.34rem 0.6rem; font-size:clamp(0.76rem, 2.2vw, 0.9rem); }
+  }
+
+  /* very small screens */
+  @media (max-width:520px){
+    .navbar img.logo{ height:30px; }
+    .navbar h1{ font-size:1rem; }
+    .nav-search input{ padding:0.45rem; font-size:0.92rem; }
+    .nav-search button{ padding:0.45rem 0.6rem; font-size:0.9rem; }
+    .navbar nav a{ padding:0.28rem 0.5rem; font-size:0.85rem; }
+    .nav-center{ padding:0 0.25rem; }
+  }
+
+    /* Page layout */
+    .container{padding:2rem 10%}
+    .back{display:inline-block;margin-bottom:1rem;color:var(--dark);text-decoration:none;font-weight:600}
+    .card{
+      display:flex;
+      gap:1rem;
+      background:#fff;border-radius:10px;padding:1rem;
+      box-shadow:0 2px 8px rgba(0,0,0,0.06);
+      align-items:stretch;
+    }
+    .card-media{
+      flex:0 0 320px;
+      border-radius:8px;
+      overflow:hidden;
+      background:#fff;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      padding:.5rem;
+    }
+    .card-media img{max-width:100%;max-height:100%;object-fit:contain;display:block}
+    .card-body{flex:1;display:flex;flex-direction:column;gap:.5rem}
+    .kpi{display:flex;gap:1rem;margin-top:.5rem}
+    .kpi .item{background:#f4f6fa;padding:.6rem .8rem;border-radius:8px;font-weight:600;color:var(--dark)}
+
+    h2{color:var(--dark);margin:0 0 .5rem 0}
+    h3{margin:.25rem 0 .5rem 0;color:var(--dark)}
+    p{margin:.25rem 0;color:#333}
+
+    .actions{margin-top:1rem;display:flex;gap:.75rem;align-items:center}
+    .btn{background:var(--orange);color:#fff;padding:.6rem 1rem;border-radius:8px;border:0;cursor:pointer;font-weight:700;text-decoration:none;display:inline-block}
+    .btn.secondary{background:#fff;color:var(--dark);border:1px solid #ddd}
+    .btn:hover{background:var(--orange-strong)}
+
+    /* Sections */
+    .section{margin-top:1.25rem}
+    .two-col{display:grid;grid-template-columns:1fr 320px;gap:1rem}
+    .info-list{background:#fff;padding:1rem;border-radius:8px;box-shadow:0 1px 4px rgba(0,0,0,0.04)}
+
+    /* responsive */
+    @media (max-width:900px){
+      .card{flex-direction:column}
+      .card-media{flex:0 0 auto;width:100%;height:200px}
+      .two-col{grid-template-columns:1fr}
+      .nav-center{position:static;transform:none;margin-left:auto;max-width:420px}
+    }
+
+    /* Logo dans la navbar : taille fixe en hauteur, ratio conservé */
+    .navbar > img,
+    .navbar img.logo {
+      height: 100px;      /* ajuster la hauteur souhaitée */
+      width: auto;
+      flex: 0 0 auto;
+      display: block;
+      margin-right: 0.6rem;
+    }
+
+    /* Réduction sur petits écrans */
+    @media (max-width: 900px) {
+      .navbar > img,
+      .navbar img.logo {
+        height: 34px;
+      }
+    }
+    @media (max-width: 520px) {
+      .navbar > img,
+      .navbar img.logo {
+        height: 30px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <!-- Navbar -->
+  <div class="navbar">
+    <img src="./img/schoolmatch.png" alt="SCHOOLMATCH" class="logo" />
+
+    <div class="nav-center">
+      <form class="nav-search" role="search" action="#" method="get" onsubmit="return false;">
+        <input type="text" name="q" placeholder="Rechercher universités, ville, domaine..." aria-label="Rechercher">
+        <button type="submit">Rechercher</button>
+      </form>
+    </div>
+
+    <nav>
+      <a href="index.html">Accueil</a>
+      <a href="index.html#universities">Universités</a>
+      <a href="index.html#about">À propos</a>
+    </nav>
+  </div>
+
+  <main class="container">
+    <a class="back" href="index.html">← Retour aux résultats</a>
+
+    <article class="card">
+      <div class="card-media">
+        <img src="./img/aix-marseille-universite-logo-png_seeklogo-353656.webp" alt="Aix‑Marseille Université" />
+      </div>
+
+      <div class="card-body">
+        <h2>Aix‑Marseille Université (AMU)</h2>
+        <p><strong>Localisation :</strong> Aix‑en‑Provence / Marseille, Région Provence‑Alpes‑Côte d'Azur</p>
+        <p>Université pluridisciplinaire couvrant sciences, santé, droit, économie, arts et lettres. Forte implantation régionale, collaborations internationales et nombreux partenariats industriels.</p>
+
+        <div class="kpi" aria-hidden="true">
+          <div class="item">Classement : top national (ex. top 10–30)</div>
+          <div class="item">Frais : ~€2 700/an</div>
+          <div class="item">Note : ⭐ 4.4</div>
+        </div>
+
+        <div class="actions">
+          <a class="btn" href="#">Candidater</a>
+          <a class="btn secondary" href="#">Ajouter à la comparaison</a>
+        </div>
+      </div>
+    </article>
+
+    <div class="section two-col">
+      <div>
+        <section class="info-list">
+          <h3>Programmes principaux</h3>
+          <ul>
+            <li>Sciences & technologies (informatique, physique, chimie)</li>
+            <li>Santé & médecine</li>
+            <li>Droit, économie et gestion</li>
+            <li>Arts, lettres et sciences humaines</li>
+            <li>Masters internationaux et recherche</li>
+          </ul>
+        </section>
+
+        <section class="info-list" style="margin-top:1rem">
+          <h3>Admissions & exigences</h3>
+          <p>Procédures variables selon le niveau et la composante : candidature en ligne, dossier académique, parfois entretien ou concours. Informations pour étudiants internationaux disponibles sur le site officiel.</p>
+        </section>
+
+        <section class="info-list" style="margin-top:1rem">
+          <h3>Avis</h3>
+
+          <div class="reviews-list" style="display:flex;flex-direction:column;gap:0.75rem;">
+            <div class="review">
+              <div style="display:flex;align-items:center;justify-content:space-between;gap:1rem">
+                <strong>Qualité de l’enseignement</strong>
+                <div style="color:var(--orange);font-size:1.05rem">★★★★☆ <span style="color:#333;font-weight:600;margin-left:0.5rem">4.1/5</span></div>
+              </div>
+              <p style="margin:0.35rem 0 0;color:#444">Bon équilibre recherche/enseignement, bonnes ressources dans la plupart des filières ; certaines formations très professionnalisantes.</p>
+            </div>
+
+            <div class="review">
+              <div style="display:flex;align-items:center;justify-content:space-between;gap:1rem">
+                <strong>Coût de la vie dans la ville</strong>
+                <div style="color:var(--orange);font-size:1.05rem">★★★☆☆ <span style="color:#333;font-weight:600;margin-left:0.5rem">3.0/5</span></div>
+              </div>
+              <p style="margin:0.35rem 0 0;color:#444">Coût de la vie variable : Aix‑en‑Provence est raisonnable, Marseille centre peut être plus cher selon le quartier ; options étudiantes et aides disponibles.</p>
+            </div>
+
+            <div class="review">
+              <div style="display:flex;align-items:center;justify-content:space-between;gap:1rem">
+                <strong>Logements disponibles</strong>
+                <div style="color:var(--orange);font-size:1.05rem">★★★☆☆ <span style="color:#333;font-weight:600;margin-left:0.5rem">3.2/5</span></div>
+              </div>
+              <p style="margin:0.35rem 0 0;color:#444">Offre mixte (CROUS, résidences privées, logements partagés). Forte demande dans certaines zones, anticiper sa recherche.</p>
+            </div>
+
+            <div class="review">
+              <div style="display:flex;align-items:center;justify-content:space-between;gap:1rem">
+                <strong>Ambiance générale</strong>
+                <div style="color:var(--orange);font-size:1.05rem">★★★★☆ <span style="color:#333;font-weight:600;margin-left:0.5rem">4.0/5</span></div>
+              </div>
+              <p style="margin:0.35rem 0 0;color:#444">Ambiance ensoleillée et conviviale, vie associative et étudiante bien développée, diversité culturelle marquée.</p>
+            </div>
+
+            <div class="review">
+              <div style="display:flex;align-items:center;justify-content:space-between;gap:1rem">
+                <strong>Loisirs et infrastructures</strong>
+                <div style="color:var(--orange);font-size:1.05rem">★★★★☆ <span style="color:#333;font-weight:600;margin-left:0.5rem">4.1/5</span></div>
+              </div>
+              <p style="margin:0.35rem 0 0;color:#444">Bonnes infrastructures sportives et culturelles, vie nocturne active, accès aux activités en bord de mer et en région Provence.</p>
+            </div>
+          </div>
+        </section>
+
+        <section class="info-list" style="margin-top:1rem">
+          <h3>Contact</h3>
+          <p><strong>Adresse (exemple) :</strong> Aix‑en‑Provence / Marseille, France</p>
+          <p><strong>Téléphone :</strong> +33 4 91 00 00 00 (exemple)</p>
+          <p><strong>Site :</strong> <a href="#" target="_blank" rel="noopener">site officiel Aix‑Marseille Université</a></p>
+        </section>
+      </div>
+
+      <aside>
+        <section class="info-list">
+          <h3>Localisation</h3>
+          <div style="width:100%;height:200px;border-radius:6px;overflow:hidden;background:#fff">
+            <iframe
+              src="https://www.google.com/maps?q=43.296482,5.36978&z=13&output=embed"
+              width="100%" height="200" style="border:0" allowfullscreen="" loading="lazy"
+              referrerpolicy="no-referrer-when-downgrade"></iframe>
+          </div>
+        </section>
+
+        <div class="info-list" style="margin-top:1rem">
+          <h3>Statistiques</h3>
+          <p><strong>Étudiants :</strong> ~70 000 (est.)</p>
+          <p><strong>Langues :</strong> Français, nombreux programmes en anglais</p>
+        </div>
+      </aside>
+    </div>
+  </main>
+
+  <footer style="background:var(--dark);color:#fff;padding:1.25rem;text-align:center;margin-top:2rem">
+    © 2025 SCHOOLMATCH — Page de détail éducative
+  </footer>
+</body>
+</html>
