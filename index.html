@@ -314,12 +314,36 @@
       font-size: 0.9rem;
       margin-top: 3rem;
     }
+
+    /* Logo dans la navbar : taille fixe en hauteur, ratio conservé */
+    .navbar > img,
+    .navbar img.logo {
+      height: 100px;      /* ajuster la hauteur souhaitée */
+      width: auto;
+      flex: 0 0 auto;
+      display: block;
+      margin-right: 0.6rem;
+    }
+
+    /* Réduction sur petits écrans */
+    @media (max-width: 900px) {
+      .navbar > img,
+      .navbar img.logo {
+        height: 34px;
+      }
+    }
+    @media (max-width: 520px) {
+      .navbar > img,
+      .navbar img.logo {
+        height: 30px;
+      }
+    }
   </style>
 </head>
 <body>
   <!-- Navbar -->
   <div class="navbar">
-    <h1>SCHOOLMATCH</h1>
+    <img src="./img/schoolmatch.png" alt="SCHOOLMATCH" />
 
     <div class="nav-center">
       <form class="nav-search" role="search" action="#" method="get" onsubmit="return false;">
